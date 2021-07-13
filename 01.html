@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>js获取本地图片转换成灰度图</title>
+		<style type="text/css">
+			.scream-div {
+				width: 400px;
+				height: 300px;
+				position: absolute;
+				top: 60px;
+				border: 1px solid;
+			}
+
+			#canvas {
+				position: absolute;
+				top: 60px;
+				left: 500px;
+				border: 1px dashed;
+			}
+		</style>
+	</head>
+	<body>
+		<input type="file" onchange="loadImg()" />
+		<input type="button" value="灰度化" onclick="Convert256toGray()" />
+		<br /><br />
+		<div class="scream-div">
+			<img id="scream" width="400px" height="300px" alt="请选择图片...">
+		</div>
+		<canvas id="canvas" width="400px;" height="300px;">
+			your browser does not support canvas!
+		</canvas>
+		<script>
+			function Convert256toGray() {
+				let c = document.getElementById("canvas");
+				let ctx = c.getContext("2d");
+				let imgData = ctx.getImageData(0, 0, c_w, c_h);
+				for (let i = 0; i < imgData.data.length; i += 4) {
+					let R = imgData.data[i];
+					let G = imgData.data[i + 1]
+					let B = imgData.data[i + 2];
+					let Alpha = imgData.data[i + 3];
+
+					let gray = R * 0.299 + G * 0.587 + B * 0.114;
+					imgData.data[i] = gray;
+					imgData.data[i + 1] = gray;
+					imgData.data[i + 2] = gray;
+					imgData.data[i + 3] = Alpha;
+				}
+				ctx.putImageData(imgData, 0, 0);
+			}
+
+
+			let c_w = 400;
+			let c_h = 300;
+
+			function loadImg() {
+				let img = document.getElementById("scream");
+				let file = document.querySelector('input[type=file]').files[0];
+				if (!/image\/\w+/.test(file.type)) {
+					alert("文件必须为图片！");
+					return false;
+				}
+				let reader = new FileReader();
+				reader.addEventListener("load", function() {
+					img.src = reader.result;
+				}, false);
+				if (file) {
+					reader.readAsDataURL(file);
+					loadCanvas();
+				}
+			}
+
+			function loadCanvas() {
+				let c = document.getElementById("canvas");
+				let ctx = c.getContext("2d");
+				let img = document.getElementById("scream");
+				img.onload = function() {
+					ctx.drawImage(img, 0, 0, c_w, c_h);
+				}
+			}
+		</script>
+	</body>
+</html>

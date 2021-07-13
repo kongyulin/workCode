@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			//十进制转任意进制(2~64) number-十进制数，radix-转换的进制
+			function string10to(number, radix) {
+				let chars = '0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ-~'.split(''),
+					qutient = +number,
+					arr = [];
+				do {
+					let mod = qutient % radix;
+					qutient = (qutient - mod) / radix;
+					arr.unshift(chars[mod]);
+				} while (qutient);
+				return arr.join('');
+			}
+
+			// console.log(string10to(18534, 64)); 4xC
+
+			function stringTo10(number_code, radix) {
+				let chars = '0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ-~',
+					number_code = String(number_code),
+					len = number_code.length,
+					i = 0,
+					origin_number = 0;
+				while (i < len) {
+					origin_number += Math.pow(radix, i++) * chars.indexOf(number_code.charAt(len - i) || 0);
+				}
+				return origin_number;
+			}
+
+			// console.log(stringTo10('4xC', 64));
+		</script>
+	</body>
+</html>
